@@ -1,4 +1,5 @@
 "use client";
+import { data } from "autoprefixer";
 import { useEffect, useMemo, useState, useCallback } from "react";
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
   const [drugs, setDrugs] = useState([]);
   const [selectedDrug, setSelectedDrug] = useState(null);
   const [filters, setFilters] = useState(new Set());
+  const [dataCount, setDataCount] = useState(0);
 
   useEffect(() => {
     const searchConcepts = async () => {
@@ -17,6 +19,7 @@ export default function Home() {
         setFilters(new Set());
         const response = await fetch(`/api/searchByConcept?search=${search}`);
         const data = await response.json();
+        setDataCount(data.length);
         setConcepts(
           data
             ? data
@@ -146,7 +149,9 @@ export default function Home() {
   return (
     <div className="p-5 grid grid-cols-3 divide-x">
       <div className="px-4">
-        <h1 className="text-lg mb-4 font-bold	">1. Search</h1>
+        <h1 className="text-lg mb-4 font-bold	">
+          1. Search{dataCount > 0 ? `, ${concepts.length} / ${dataCount}` : ""}
+        </h1>
         <input
           type="text"
           onChange={(e) => setSearch(e.target.value)}
