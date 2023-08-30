@@ -158,7 +158,10 @@ export default function Home() {
             <li
               key={c.drugbank_pcid}
               className={`py-2 cursor-pointer ${
-                c?.rxnorm_concepts?.length === 0 ? "bg-red-200" : ""
+                c?.rxnorm_concepts?.length === 0 &&
+                selectedConcept?.drugbank_pcid !== c.drugbank_pcid
+                  ? "bg-red-50"
+                  : ""
               } ${
                 selectedConcept?.drugbank_pcid === c.drugbank_pcid
                   ? "bg-blue-200"
