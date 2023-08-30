@@ -20,8 +20,9 @@ export default function Home() {
         setConcepts(
           data
             ? data
+                .filter((c) => c.standing === "active")
                 .filter((c) => c.regions.us)
-                .filter((c) => c.rxnorm_concepts.length > 0)
+                .filter((c) => c.rxnorm_concepts.length > 0 || c.brand)
             : []
         );
       }
@@ -157,6 +158,8 @@ export default function Home() {
             <li
               key={c.drugbank_pcid}
               className={`py-2 cursor-pointer ${
+                c?.rxnorm_concepts?.length === 0 ? "bg-red-200" : ""
+              } ${
                 selectedConcept?.drugbank_pcid === c.drugbank_pcid
                   ? "bg-blue-200"
                   : ""
