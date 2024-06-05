@@ -19,6 +19,7 @@ export default function Home() {
         setFilters(new Set());
         const response = await fetch(`/api/searchByConcept?search=${search}`);
         const data = await response.json();
+        console.log(data);
         setDataCount(data.length);
         setConcepts(
           data
