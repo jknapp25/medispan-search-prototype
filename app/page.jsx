@@ -2,6 +2,21 @@
 import { data } from "autoprefixer";
 import { useEffect, useMemo, useState, useCallback } from "react";
 
+function boldSubstring(inputString, substring) {
+  const parts = inputString.split(new RegExp(`(${substring})`, "gi"));
+  return parts.map((part, index) => {
+    if (part.toLowerCase() === substring.toLowerCase()) {
+      return (
+        <strong key={index} className="font-bold">
+          {part}
+        </strong>
+      );
+    } else {
+      return part;
+    }
+  });
+}
+
 export default function Home() {
   const [search, setSearch] = useState("");
   const [concepts, setConcepts] = useState([]);
@@ -11,24 +26,25 @@ export default function Home() {
   const [filters, setFilters] = useState(new Set());
   const [dataCount, setDataCount] = useState(0);
 
+  // cGhvdG9uaGx0aDoyN1U1RkpHMw==
+
   useEffect(() => {
     const searchConcepts = async () => {
-      if (search) {
+      if (search && search.length > 2) {
         setDrugs([]);
         setSelectedDrug(null);
         setFilters(new Set());
-        const response = await fetch(`/api/searchByConcept?search=${search}`);
-        const data = await response.json();
-        console.log(data);
-        setDataCount(data.length);
-        setConcepts(
-          data
-            ? data
-                .filter((c) => c.standing === "active")
-                .filter((c) => c.regions.us)
-                .filter((c) => c.rxnorm_concepts.length > 0 || c.brand)
-            : []
+        const response = await fetch(
+          `/api/searchMedispanByConcept?search=${search}`
         );
+        const data = await response.json();
+        console.log("data!!!", data);
+        setDataCount(data.length);
+        setConcepts(data?.results || []);
+      } else {
+        setDrugs([]);
+        setDataCount(0);
+        setConcepts([]);
       }
     };
 
@@ -148,131 +164,55 @@ export default function Home() {
   }, [filters, drugs]);
 
   return (
-    <div className="p-5 grid grid-cols-3 divide-x">
-      <div className="px-4">
-        <h1 className="text-lg mb-4 font-bold	">
-          1. Search{dataCount > 0 ? `, ${concepts.length} / ${dataCount}` : ""}
-        </h1>
+    <div className="p-5 grid grid-cols-4">
+      <div className="col-span-1"></div>
+      <div className="col-span-2">
         <input
           type="text"
           onChange={(e) => setSearch(e.target.value)}
           value={search}
-          className="mb-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
+          placeholder="Start typing..."
+          className="mb-2 block w-full rounded-lg border-0 py-4 text-lg text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:leading-6 px-5"
         />
-        <ul className="divide-y">
-          {concepts.map((c) => (
-            <li
-              key={c.drugbank_pcid}
-              className={`py-2 cursor-pointer ${
-                c?.rxnorm_concepts?.length === 0 &&
-                selectedConcept?.drugbank_pcid !== c.drugbank_pcid
-                  ? "bg-red-50"
-                  : ""
-              } ${
-                selectedConcept?.drugbank_pcid === c.drugbank_pcid
-                  ? "bg-blue-200"
-                  : ""
-              }`}
-              onClick={() => {
-                setSelectedConcept(c);
-              }}
-            >
-              <div className="text-sm">{c.name}</div>
-              <div className="text-xs	">Drug Bank ID: {c.drugbank_pcid}</div>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* drug filter */}
-      <div className="px-4">
-        <h1 className="text-lg mb-4 font-bold	">2. Filter</h1>
-        {drugs.length > 0 && (
-          <>
-            <h2 className="my-4 font-bold	">Forms</h2>
-            <ul className="divide-y flex flex-wrap">
-              {drugForms.map((f) => (
-                <li
-                  key={f}
-                  className={`rounded-full cursor-pointer px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 ${
-                    filters.has(f) ? "bg-blue-200" : "bg-gray-200"
-                  }`}
-                  onClick={() => {
-                    setFilterCallback(f);
-                  }}
-                >
-                  <div className="text-sm">{f}</div>
-                </li>
-              ))}
+        {search.length === 0 ? null : search.length > 0 && search.length < 3 ? (
+          <div className="mb-4 block w-full rounded-lg border-0 py-4 text-gray-900 shadow-md px-5 ring-1 ring-inset ring-gray-300">
+            <div className="text-sm text-gray-400">
+              Enter atleast 3 characters
+            </div>
+          </div>
+        ) : concepts.length > 0 ? (
+          <div className="mb-4 block w-full rounded-lg border-0 py-4 text-gray-900 shadow-md px-5 ring-1 ring-inset ring-gray-300">
+            <ul className="divide-y">
+              {concepts.map((c) => {
+                const displayName = `${c.name} ${c.strength} ${c.form}`
+                  .trim()
+                  .replace(/\s+/g, " ");
+                const boldedContent = boldSubstring(displayName, search);
+                return (
+                  <li
+                    key={c.mediSpanId}
+                    className={`py-2 cursor-pointer hover:bg-gray-50`}
+                    onClick={() => {
+                      setSelectedConcept(c);
+                    }}
+                  >
+                    <div className="text-sm">{boldedContent}</div>
+                    {/* <div className="text-xs	text-gray-300">
+                      Name: {c.name} - Strength: {c.strength || "None"} - Form:{" "}
+                      {c.form || "None"}
+                    </div> */}
+                  </li>
+                );
+              })}
             </ul>
-            <h2 className="my-4 font-bold	">Route</h2>
-            <ul className="divide-y flex flex-wrap">
-              {drugRoutes.map((r) => (
-                <li
-                  key={r}
-                  className={`rounded-full cursor-pointer px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 ${
-                    filters.has(r) ? "bg-blue-200" : "bg-gray-200"
-                  }`}
-                  onClick={() => {
-                    setFilterCallback(r);
-                  }}
-                >
-                  <div className="text-sm">{r}</div>
-                </li>
-              ))}
-            </ul>
-            <h2 className="my-4 font-bold	">Strength</h2>
-            <ul className="divide-y flex flex-wrap">
-              {drugStrengths.map((s) => (
-                <li
-                  key={s}
-                  className={`rounded-full cursor-pointer px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 ${
-                    filters.has(s) ? "bg-blue-200" : "bg-gray-200"
-                  }`}
-                  onClick={() => {
-                    setFilterCallback(s);
-                  }}
-                >
-                  <div className="text-sm">{s}</div>
-                </li>
-              ))}
-            </ul>
-          </>
+          </div>
+        ) : (
+          <div className="mb-4 block w-full rounded-lg border-0 py-4 text-gray-900 shadow-md px-5 ring-1 ring-inset ring-gray-300">
+            <div className="text-sm text-gray-400">Loading...</div>
+          </div>
         )}
       </div>
-
-      {/* drug list */}
-      <div className="px-4">
-        <h1 className="text-lg mb-4 font-bold	">3. Select</h1>
-        <ul className="divide-y">
-          {filteredDrugs.map((d) => (
-            <li
-              key={d.ndc_product_code}
-              className={`py-2 cursor-pointer ${
-                selectedDrug?.ndc_product_code === d.ndc_product_code
-                  ? "bg-blue-200"
-                  : ""
-              }`}
-              onClick={() => {
-                setSelectedDrug(d);
-              }}
-            >
-              <div>
-                {d?.rx_norm_prescribable_name ||
-                  d?.prescribable_name ||
-                  d?.name}
-              </div>
-              <div className="text-xs	">
-                {d.dosage_form} - {d.route}
-                {/* - {d?.labeller?.name} */}
-              </div>
-              <div className="text-xs	text-gray-400">
-                NDC Code: {d.ndc_product_code}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <div className="col-span-1"></div>
     </div>
   );
 }
