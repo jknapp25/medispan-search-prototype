@@ -38,7 +38,7 @@ export default function Home() {
           `/api/searchMedispanByConcept?search=${search}`
         );
         const data = await response.json();
-        console.log("data!!!", data);
+        // console.log("data!!!", data);
         setDataCount(data.length);
         setConcepts(data?.results || []);
       } else {
@@ -183,7 +183,7 @@ export default function Home() {
         ) : concepts.length > 0 ? (
           <div className="mb-4 block w-full rounded-lg border-0 py-4 text-gray-900 shadow-md px-5 ring-1 ring-inset ring-gray-300">
             <ul className="divide-y">
-              {concepts.map((c) => {
+              {concepts.map((c, i) => {
                 const displayName = `${c.name} ${c.strength} ${c.form}`
                   .trim()
                   .replace(/\s+/g, " ");

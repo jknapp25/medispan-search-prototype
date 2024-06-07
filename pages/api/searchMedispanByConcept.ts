@@ -6,7 +6,7 @@ const API_BASE_URL = "https://mscservices.wolterskluwercdi.com/3/medispan";
 const HEADERS = {
   "Content-Type": "application/json",
   Accept: "application/json",
-  Authorization: "Basic cGhvdG9uaGx0aDoyN1U1RkpHMw==",
+  Authorization: `Basic ${process.env.MEDISPAN_AUTH}`,
 };
 const CUSTOMER_TRANSACTION_ID = "1234";
 
@@ -74,6 +74,8 @@ const fetchDoseForm = async (doseFormId: string) => {
     { withCredentials: true, headers: HEADERS }
   );
 
+  console.log("form: ", response?.data?.results[0]?.name);
+
   return response?.data?.results[0]?.name ?? null;
 };
 
@@ -109,6 +111,7 @@ export default async function handler(
         const form = doseForm ?? "";
 
         return {
+          mediSpanId: drug.mediSpanId,
           name: name,
           strength,
           form,
