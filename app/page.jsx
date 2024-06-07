@@ -192,9 +192,6 @@ export default function Home() {
                   <li
                     key={c.mediSpanId}
                     className={`py-2 cursor-pointer hover:bg-gray-50`}
-                    onClick={() => {
-                      setSelectedConcept(c);
-                    }}
                   >
                     <div className="text-sm">{boldedContent}</div>
                     <div className="text-xs	text-gray-400">
