@@ -30,7 +30,7 @@ const fetchInitialResults = async (search: string) => {
     { withCredentials: true, headers: HEADERS }
   );
 
-  return response?.data?.results?.slice(0, 30) ?? [];
+  return response?.data?.results?.slice(0, 50) ?? [];
 };
 
 const fetchDetailResults = async (mediSpanId: string) => {

@@ -197,10 +197,10 @@ export default function Home() {
                     }}
                   >
                     <div className="text-sm">{boldedContent}</div>
-                    {/* <div className="text-xs	text-gray-300">
+                    <div className="text-xs	text-gray-400">
                       Name: {c.name} - Strength: {c.strength || "None"} - Form:{" "}
                       {c.form || "None"}
-                    </div> */}
+                    </div>
                   </li>
                 );
               })}
