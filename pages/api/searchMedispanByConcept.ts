@@ -102,7 +102,7 @@ export default async function handler(
     const detailedResults = await Promise.all(
       initialResults.map(async (drug: any) => {
         const detail = await fetchDetailResults(drug.mediSpanId);
-        const name = drug?.name ?? "";
+        const name = detail?.name || drug?.name || "";
         const strength = detail?.strength ?? "";
         const doseFormId = detail?.doseForm?.value;
 
