@@ -52,9 +52,6 @@ const fetchDetailResults = async (mediSpanId: string) => {
     { withCredentials: true, headers: HEADERS }
   );
 
-  console.log("---DETAIL---");
-  console.log(response?.data?.results[0]);
-
   return response?.data?.results[0] ?? [];
 };
 
@@ -76,8 +73,6 @@ const fetchDoseForm = async (doseFormId: string) => {
     doseFormSearchData,
     { withCredentials: true, headers: HEADERS }
   );
-
-  console.log("form: ", response?.data?.results[0]?.name);
 
   return response?.data?.results[0]?.name ?? null;
 };
