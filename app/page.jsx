@@ -81,6 +81,13 @@ export default function Home() {
             </div>
           </div>
         ) : null}
+        {!loading && search.length > 2 && concepts.length === 0 ? (
+          <div className="mb-4 block w-full rounded-lg border-0 py-4 text-gray-900 shadow-md px-5 ring-1 ring-inset ring-gray-300">
+            <div className="text-sm text-gray-400">
+              No results, try less specific
+            </div>
+          </div>
+        ) : null}
         {!loading && search.length > 0 && concepts.length > 0 ? (
           <div className="mb-4 block w-full rounded-lg border-0 py-4 text-gray-900 shadow-md px-5 ring-1 ring-inset ring-gray-300">
             <ul className="divide-y">
