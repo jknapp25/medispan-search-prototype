@@ -3,10 +3,32 @@
 import { useEffect, useState, useRef } from "react";
 import debounce from "lodash/debounce";
 
+// function boldSubstring(inputString, substring) {
+//   const parts = inputString.split(new RegExp(`(${substring})`, "gi"));
+//   return parts.map((part, index) => {
+//     if (part.toLowerCase() === substring.toLowerCase()) {
+//       return (
+//         <strong key={index} className="font-bold">
+//           {part}
+//         </strong>
+//       );
+//     } else {
+//       return part;
+//     }
+//   });
+// }
+
 function boldSubstring(inputString, substring) {
-  const parts = inputString.split(new RegExp(`(${substring})`, "gi"));
+  // Split the substring into parts
+  const substrings = substring.split(" ").filter((part) => part.length > 0);
+
+  // Create a regular expression to match any of the substrings
+  const regex = new RegExp(`(${substrings.join("|")})`, "gi");
+
+  // Split the inputString using the regex and map the parts
+  const parts = inputString.split(regex);
   return parts.map((part, index) => {
-    if (part.toLowerCase() === substring.toLowerCase()) {
+    if (substrings.some((sub) => sub.toLowerCase() === part.toLowerCase())) {
       return (
         <strong key={index} className="font-bold">
           {part}
@@ -92,13 +114,17 @@ export default function Home() {
           <div className="mb-4 block w-full rounded-lg border-0 py-4 text-gray-900 shadow-md px-5 ring-1 ring-inset ring-gray-300">
             <ul className="divide-y">
               {concepts.map((c, i) => {
-                const boldedContent = boldSubstring(c.name, search);
+                const boldedContent = boldSubstring(c, search);
                 return (
                   <li
-                    key={c.mediSpanId}
+                    key={c}
                     className={`py-2 cursor-pointer hover:bg-gray-50`}
                   >
                     <div className="text-sm">{boldedContent}</div>
+                    {/* <div className="text-xs	text-gray-400">
+                      {c.strengths.map((s) => s).join(", ")} - Form:{" "}
+                      {c.form || "None"}
+                    </div> */}
                     {/* <div className="text-xs	text-gray-400">
                       Name: {c.name} - Strength: {c.strength || "None"} - Form:{" "}
                       {c.form || "None"}
