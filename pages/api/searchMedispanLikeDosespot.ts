@@ -3,15 +3,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 function concatenateNameWithForm(results: any) {
   return results.flatMap((item: any) => {
-    // Extract drug name
-    const drugName = item.name;
-
-    // Extract form names from relatedConcepts
-    const formNames = item.relatedConcepts.flatMap((concept: any) =>
-      concept.concepts.map((form: any) => form.name)
+    const nameParts = item.relatedConcepts.map((itm: any) =>
+      itm.conceptType === "medispan/routeddrugs" ||
+      itm.conceptType === "medispan/doseforms"
+        ? itm.concepts[0].name
+        : null
     );
 
-    return formNames.map((formName: any) => `${drugName} ${formName}`);
+    return nameParts.join(" ");
   });
 }
 
@@ -31,6 +30,10 @@ const fetchYall = async (searchCriteria: any) => {
     fields: ["name"],
     relatedConcepts: [
       {
+        conceptType: "medispan/routeddrugs",
+        fields: ["name"],
+      },
+      {
         conceptType: "medispan/doseforms",
         fields: ["name"],
       },
@@ -38,12 +41,10 @@ const fetchYall = async (searchCriteria: any) => {
   });
 
   const response = await axios.post(
-    `${API_BASE_URL}/medispan/routeddrugs`,
+    `${API_BASE_URL}/medispan/dispensabledrugs`,
     detailSearchData,
     { withCredentials: true, headers: HEADERS }
   );
-
-  console.log(response);
 
   return response?.data?.results ?? [];
 };
@@ -71,7 +72,14 @@ export default async function handler(
     const initialResults = await fetchYall(searchCriteria);
     const final = concatenateNameWithForm(initialResults);
 
-    res.status(200).json({ results: final });
+    const uniqueResults = final.reduce((acc: any, current: any) => {
+      if (!acc.some((item: any) => item === current)) {
+        acc.push(current);
+      }
+      return acc;
+    }, []);
+
+    res.status(200).json({ results: uniqueResults });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred" });

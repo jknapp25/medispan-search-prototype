@@ -26,14 +26,6 @@ const fetchYall = async (searchCriteria: any) => {
   return response?.data?.results ?? [];
 };
 
-// // Detect search term type (name, strength, etc.)
-// const detectSearchType = (term: string) => {
-//   if (/^\d+$/.test(term)) {
-//     return { field: "strength", operator: "contains", value: term };
-//   }
-//   return { field: "name", operator: "contains", value: term };
-// };
-
 // Main handler
 export default async function handler(
   req: NextApiRequest,
