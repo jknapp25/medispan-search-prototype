@@ -18,7 +18,7 @@ export default function Home() {
           class="border-solid border border-gray-300 rounded-md py-2 px-3 mt-3  cursor-pointer hover:bg-gray-50 font-medium"
           onClick={() => router.push("/search-1")}
         >
-          <div className="inline-block">Search 1</div>
+          <div className="inline-block">Search 1: Medispan</div>
           <div className="inline-block float-right mt-1">
             <FaArrowRightLong />
           </div>
@@ -27,7 +27,7 @@ export default function Home() {
           class="border-solid border border-gray-300 rounded-md py-2 px-3 mt-2  cursor-pointer hover:bg-gray-50 font-medium"
           onClick={() => router.push("/search-2")}
         >
-          <div className="inline-block">Search 2</div>
+          <div className="inline-block">Search 2: RxNorm</div>
           <div className="inline-block float-right mt-1">
             <FaArrowRightLong />
           </div>
@@ -36,7 +36,7 @@ export default function Home() {
           class="border-solid border border-gray-300 rounded-md py-2 px-3 mt-2  cursor-pointer hover:bg-gray-50 font-medium"
           onClick={() => router.push("/search-3")}
         >
-          <div className="inline-block">Search 3</div>
+          <div className="inline-block">Search 3: DoseSpot-ish</div>
           <div className="inline-block float-right mt-1">
             <FaArrowRightLong />
           </div>
