@@ -10,7 +10,7 @@ const HEADERS = {
 };
 const CUSTOMER_TRANSACTION_ID = "1234";
 
-const fetchYall = async (searchCriteria: any) => {
+const fetch = async (searchCriteria: any) => {
   const detailSearchData = JSON.stringify({
     customerTransactionId: CUSTOMER_TRANSACTION_ID,
     criteria: searchCriteria,
@@ -18,7 +18,7 @@ const fetchYall = async (searchCriteria: any) => {
   });
 
   const response = await axios.post(
-    `${API_BASE_URL}/medispan/dispensabledrugs`,
+    `${API_BASE_URL}/medispan/drugnames`,
     detailSearchData,
     { withCredentials: true, headers: HEADERS }
   );
@@ -46,7 +46,7 @@ export default async function handler(
       value: term,
     }));
 
-    const initialResults = await fetchYall(searchCriteria);
+    const initialResults = await fetch(searchCriteria);
 
     const uniqueResults = initialResults.reduce((acc: any, current: any) => {
       if (!acc.some((item: any) => item === current.name)) {

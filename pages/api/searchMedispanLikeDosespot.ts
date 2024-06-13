@@ -3,14 +3,23 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 function concatenateNameWithForm(results: any) {
   return results.flatMap((item: any) => {
-    const nameParts = item.relatedConcepts.map((itm: any) =>
-      itm.conceptType === "medispan/routeddrugs" ||
-      itm.conceptType === "medispan/doseforms"
-        ? itm.concepts[0].name
-        : null
-    );
+    let nameParts: any = [];
+    let mediSpanId = null;
+    item.relatedConcepts.forEach((itm: any) => {
+      if (itm.conceptType === "medispan/routeddrugs") {
+        nameParts.push(itm.concepts[0].name);
+        mediSpanId = itm.concepts[0].mediSpanId;
+      }
 
-    return nameParts.join(" ");
+      if (itm.conceptType === "medispan/doseforms") {
+        nameParts.push(itm.concepts[0].name);
+      }
+    });
+
+    return {
+      name: nameParts.join(" "),
+      mediSpanId,
+    };
   });
 }
 
@@ -23,7 +32,7 @@ const HEADERS = {
 };
 const CUSTOMER_TRANSACTION_ID = "1234";
 
-const fetchYall = async (searchCriteria: any) => {
+const fetch = async (searchCriteria: any) => {
   const detailSearchData = JSON.stringify({
     customerTransactionId: CUSTOMER_TRANSACTION_ID,
     criteria: searchCriteria,
@@ -31,7 +40,7 @@ const fetchYall = async (searchCriteria: any) => {
     relatedConcepts: [
       {
         conceptType: "medispan/routeddrugs",
-        fields: ["name"],
+        fields: ["name", "mediSpanId"],
       },
       {
         conceptType: "medispan/doseforms",
@@ -42,6 +51,33 @@ const fetchYall = async (searchCriteria: any) => {
 
   const response = await axios.post(
     `${API_BASE_URL}/medispan/dispensabledrugs`,
+    detailSearchData,
+    { withCredentials: true, headers: HEADERS }
+  );
+
+  return response?.data?.results ?? [];
+};
+const fetchStrengths = async (mediSpanId: any) => {
+  const detailSearchData = JSON.stringify({
+    customerTransactionId: CUSTOMER_TRANSACTION_ID,
+    criteria: [
+      {
+        field: "mediSpanId",
+        operator: "isEqualTo",
+        value: mediSpanId,
+      },
+    ],
+    fields: ["name"],
+    relatedConcepts: [
+      {
+        conceptType: "medispan/dispensabledrugs",
+        fields: ["name", "strength"],
+      },
+    ],
+  });
+
+  const response = await axios.post(
+    `${API_BASE_URL}/medispan/routeddrugs`,
     detailSearchData,
     { withCredentials: true, headers: HEADERS }
   );
@@ -69,15 +105,16 @@ export default async function handler(
       value: term,
     }));
 
-    const initialResults = await fetchYall(searchCriteria);
+    const initialResults = await fetch(searchCriteria);
     const final = concatenateNameWithForm(initialResults);
 
     const uniqueResults = final.reduce((acc: any, current: any) => {
-      if (!acc.some((item: any) => item === current)) {
+      if (!acc.some((item: any) => item.name === current.name)) {
         acc.push(current);
       }
       return acc;
     }, []);
+    // console.log(uniqueResults);
 
     res.status(200).json({ results: uniqueResults });
   } catch (error) {
