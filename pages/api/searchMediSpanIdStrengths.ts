@@ -71,20 +71,12 @@ export default async function handler(
   try {
     const initialResults = await fetchStrengths(search);
 
-    console.log("initialResults");
-    console.log(initialResults);
-
-    // console.log(initialResults);
     initialResults[0].relatedConcepts?.forEach((c: any) => console.log(c));
     const strengths = initialResults[0].relatedConcepts[0].concepts.map(
       (c: any) => c.strength
     );
-    // console.log(initialResults.relatedConcepts);
-
-    console.log("final");
 
     const unique = [...new Set(strengths)];
-    console.log(unique);
 
     res.status(200).json({ results: unique });
   } catch (error) {
