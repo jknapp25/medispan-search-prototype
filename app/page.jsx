@@ -2,16 +2,15 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { Suspense } from "react";
 
-export default function Home() {
+
+export function HomeContent() {
   const router = useRouter();
   const params = useSearchParams();
   const showDescription = Boolean(
     params.get("showDescription") === "true" ? true : false
   );
-
-  console.log(typeof showDescription);
-  console.log(showDescription);
 
   return (
     <div className="p-5 grid grid-cols-3">
@@ -68,5 +67,14 @@ export default function Home() {
       </div>
       <div className="col-span-1"></div>
     </div>
+  );
+}
+
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
