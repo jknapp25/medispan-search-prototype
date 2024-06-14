@@ -1,10 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FaArrowRightLong } from "react-icons/fa6";
 
 export default function Home() {
   const router = useRouter();
+  const params = useSearchParams();
+  const showDescription = Boolean(
+    params.get("showDescription") === "true" ? true : false
+  );
+
+  console.log(typeof showDescription);
+  console.log(showDescription);
 
   return (
     <div className="p-5 grid grid-cols-3">
@@ -15,32 +22,49 @@ export default function Home() {
         </p>
         <p className="text-md mb-3">Please select one to try it out.</p>
         <div
-          class="border-solid border border-gray-300 rounded-md py-2 px-3 mt-3  cursor-pointer hover:bg-gray-50 font-medium"
+          className="border-solid border border-gray-300 rounded-md py-2 px-3 mt-3  cursor-pointer hover:bg-gray-50 font-medium"
           onClick={() => router.push("/search-1")}
         >
-          <div className="inline-block">Search 1: Medispan</div>
+          <div className="inline-block">
+            Search 1{showDescription ? ": Medispan" : null}
+          </div>
           <div className="inline-block float-right mt-1">
             <FaArrowRightLong />
           </div>
         </div>
         <div
-          class="border-solid border border-gray-300 rounded-md py-2 px-3 mt-2  cursor-pointer hover:bg-gray-50 font-medium"
+          className="border-solid border border-gray-300 rounded-md py-2 px-3 mt-2  cursor-pointer hover:bg-gray-50 font-medium"
           onClick={() => router.push("/search-2")}
         >
-          <div className="inline-block">Search 2: RxNorm</div>
+          <div className="inline-block">
+            Search 2{showDescription ? ": RxNorm" : null}
+          </div>
           <div className="inline-block float-right mt-1">
             <FaArrowRightLong />
           </div>
         </div>
         <div
-          class="border-solid border border-gray-300 rounded-md py-2 px-3 mt-2  cursor-pointer hover:bg-gray-50 font-medium"
+          className="border-solid border border-gray-300 rounded-md py-2 px-3 mt-2  cursor-pointer hover:bg-gray-50 font-medium"
           onClick={() => router.push("/search-3")}
         >
-          <div className="inline-block">Search 3: DoseSpot-ish</div>
+          <div className="inline-block">
+            Search 3{showDescription ? ": DoseSpot-ish" : null}
+          </div>
           <div className="inline-block float-right mt-1">
             <FaArrowRightLong />
           </div>
         </div>
+        {showDescription ? (
+          <div className="mt-5">
+            <a
+              href="https://austinkleon.com/2024/01/30/snails-and-magical-thinking/"
+              target={`_blank`}
+              className="text-blue-500 underline"
+            >
+              Beep boop
+            </a>
+          </div>
+        ) : null}
       </div>
       <div className="col-span-1"></div>
     </div>
