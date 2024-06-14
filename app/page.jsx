@@ -63,7 +63,7 @@ export default function Home() {
                 target={`_blank`}
                 className="text-blue-500 underline"
               >
-                Is this what you're searching for?
+                {`Is this what you're searching for?`}
               </a>
             </div>
           ) : null}
