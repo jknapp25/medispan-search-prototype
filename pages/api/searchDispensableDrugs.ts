@@ -18,7 +18,7 @@ const fetch = async (searchCriteria: any) => {
   });
 
   const response = await axios.post(
-    `${API_BASE_URL}/medispan/dispensabledreugs`,
+    `${API_BASE_URL}/medispan/dispensabledrugs`,
     detailSearchData,
     { withCredentials: true, headers: HEADERS }
   );
