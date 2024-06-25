@@ -43,8 +43,8 @@ export default function Home() {
   }, [debouncedFetchConcepts]);
 
   return (
-    <div className="p-5 grid grid-cols-4">
-      <div className="col-span-1">
+    <div className="p-5 grid grid-cols-1 lg:grid-cols-4">
+      <div className="col-span-1 lg:col-span-1">
         <div
           className="text-gray-600 hover:underline font-semibold cursor-pointer"
           onClick={() => router.push("/")}
@@ -52,7 +52,7 @@ export default function Home() {
           Go back
         </div>
       </div>
-      <div className="col-span-2">
+      <div className="col-span-1 lg:col-span-2 mt-4 lg:mt-0">
         <input
           type="text"
           onChange={(e) => setSearch(e.target.value)}
@@ -71,7 +71,7 @@ export default function Home() {
         concepts.length === 0 ? (
           <div className="mb-4 block w-full rounded-lg border-0 py-4 text-gray-900 shadow-md px-5 ring-1 ring-inset ring-gray-300">
             <div className="text-sm text-gray-400">
-              Enter atleast 3 characters
+              Enter at least 3 characters
             </div>
           </div>
         ) : null}
@@ -89,7 +89,7 @@ export default function Home() {
                 const boldedContent = boldSubstring(c, search);
                 return (
                   <li
-                    key={c}
+                    key={i}
                     className={`py-2 cursor-pointer hover:bg-gray-50`}
                   >
                     <div className="text-sm">{boldedContent}</div>
@@ -100,7 +100,7 @@ export default function Home() {
           </div>
         ) : null}
       </div>
-      <div className="col-span-1"></div>
+      <div className="hidden lg:block col-span-1"></div>
     </div>
   );
 }

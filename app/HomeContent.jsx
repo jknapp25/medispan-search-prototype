@@ -16,8 +16,8 @@ export default function Home() {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <div className="p-5 grid grid-cols-3">
-        <div className="col-span-1"></div>
+      <div className="p-5 grid grid-cols-1 lg:grid-cols-3">
+        <div className="hidden lg:block col-span-1"></div>
         <div className="col-span-1">
           <p className="text-lg mb-1">
             Below are 3 different versions of medication search.
@@ -68,7 +68,7 @@ export default function Home() {
             </div>
           ) : null}
         </div>
-        <div className="col-span-1"></div>
+        <div className="hidden lg:block col-span-1"></div>
       </div>
     </Suspense>
   );

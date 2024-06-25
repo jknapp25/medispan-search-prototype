@@ -1,22 +1,6 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
-function concatenateNameWithForm(results: any) {
-  return results.flatMap((item: any) => {
-    console.log(item.relatedConcepts[0].concepts);
-
-    const nameParts = item.relatedConcepts.map((itm: any) =>
-      itm.conceptType === "medispan/routeddrugs" ||
-      itm.conceptType === "medispan/doseforms"
-        ? itm.concepts[0].name
-        : null
-    );
-
-    return nameParts.join(" ");
-  });
-}
-
-// Configuration variables
 const API_BASE_URL = "https://mscservices.wolterskluwercdi.com/3";
 const HEADERS = {
   "Content-Type": "application/json",
@@ -50,9 +34,6 @@ const fetchStrengths = async (mediSpanId: any) => {
     { withCredentials: true, headers: HEADERS }
   );
 
-  console.log("STRENGTH");
-  console.log(response);
-
   return response?.data?.results ?? [];
 };
 
@@ -71,7 +52,6 @@ export default async function handler(
   try {
     const initialResults = await fetchStrengths(search);
 
-    initialResults[0].relatedConcepts?.forEach((c: any) => console.log(c));
     const strengths = initialResults[0].relatedConcepts[0].concepts.map(
       (c: any) => c.strength
     );

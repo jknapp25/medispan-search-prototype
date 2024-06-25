@@ -97,8 +97,8 @@ export default function Home() {
   });
 
   return (
-    <div className="p-5 grid grid-cols-4">
-      <div className="col-span-1">
+    <div className="p-5 grid grid-cols-1 lg:grid-cols-4">
+      <div className="col-span-1 lg:col-span-1">
         <div
           className="text-gray-600 hover:underline font-semibold cursor-pointer"
           onClick={() => router.push("/")}
@@ -106,7 +106,7 @@ export default function Home() {
           Go back
         </div>
       </div>
-      <div className="col-span-2">
+      <div className="col-span-1 lg:col-span-2 mt-4 lg:mt-0">
         <input
           type="text"
           onChange={(e) => {
@@ -235,7 +235,7 @@ export default function Home() {
           </div>
         )}
       </div>
-      <div className="col-span-1"></div>
+      <div className="hidden lg:block col-span-1"></div>
     </div>
   );
 }
