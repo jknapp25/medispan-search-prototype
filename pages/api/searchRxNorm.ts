@@ -19,7 +19,7 @@ const fetchYall = async (searchCriteria: any) => {
   });
 
   const response = await axios.post(
-    `${API_BASE_URL}/rxnorm/semanticclinicaldrugs`,
+    `${API_BASE_URL}/rxnorm`,
     detailSearchData,
     { withCredentials: true, headers: HEADERS }
   );
