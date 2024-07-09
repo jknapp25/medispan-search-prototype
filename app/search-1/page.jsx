@@ -15,7 +15,8 @@ export default function Home() {
   const fetchConcepts = async (query) => {
     const response = await fetch(`/api/searchDispensableDrugs?search=${query}`);
     const data = await response.json();
-    setConcepts(data?.results || []);
+    const sortedData = data?.results.sort((a, b) => a.length - b.length) || [];
+    setConcepts(sortedData);
     setLoading(false);
   };
 

@@ -35,7 +35,9 @@ export default function Home() {
       `/api/searchMedispanLikeDosespot?search=${query}`
     );
     const data = await response.json();
-    setConcepts(data?.results || []);
+    const sortedData =
+      data?.results.sort((a, b) => a.name.length - b.name.length) || [];
+    setConcepts(sortedData);
     setLoading(false);
   };
 
