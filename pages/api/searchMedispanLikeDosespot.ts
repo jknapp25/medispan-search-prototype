@@ -57,33 +57,6 @@ const fetch = async (searchCriteria: any) => {
 
   return response?.data?.results ?? [];
 };
-const fetchStrengths = async (mediSpanId: any) => {
-  const detailSearchData = JSON.stringify({
-    customerTransactionId: CUSTOMER_TRANSACTION_ID,
-    criteria: [
-      {
-        field: "mediSpanId",
-        operator: "isEqualTo",
-        value: mediSpanId,
-      },
-    ],
-    fields: ["name"],
-    relatedConcepts: [
-      {
-        conceptType: "medispan/dispensabledrugs",
-        fields: ["name", "strength"],
-      },
-    ],
-  });
-
-  const response = await axios.post(
-    `${API_BASE_URL}/medispan/routeddrugs`,
-    detailSearchData,
-    { withCredentials: true, headers: HEADERS }
-  );
-
-  return response?.data?.results ?? [];
-};
 
 // Main handler
 export default async function handler(
@@ -99,9 +72,9 @@ export default async function handler(
 
   try {
     const searchTerms = (search as string).split(" ");
-    const searchCriteria = searchTerms.map((term) => ({
+    const searchCriteria = searchTerms.map((term, i) => ({
       field: "name",
-      operator: "contains",
+      operator: i === 0 ? "startsWith" : "contains",
       value: term,
     }));
 

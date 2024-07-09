@@ -1,5 +1,3 @@
-// REGULAR WORKING
-
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -15,13 +13,12 @@ const CUSTOMER_TRANSACTION_ID = "1234";
 const fetchYall = async (searchCriteria: any) => {
   const detailSearchData = JSON.stringify({
     customerTransactionId: CUSTOMER_TRANSACTION_ID,
-    count: "50",
     criteria: searchCriteria,
     fields: ["all"],
   });
 
   const response = await axios.post(
-    `${API_BASE_URL}/rxnorm`,
+    `${API_BASE_URL}/rxnorm/semanticclinicaldrugs`,
     detailSearchData,
     { withCredentials: true, headers: HEADERS }
   );
@@ -43,9 +40,9 @@ export default async function handler(
 
   try {
     const searchTerms = (search as string).split(" ");
-    const searchCriteria = searchTerms.map((term) => ({
+    const searchCriteria = searchTerms.map((term, i) => ({
       field: "name",
-      operator: "contains",
+      operator: i === 0 ? "startsWith" : "contains",
       value: term,
     }));
 

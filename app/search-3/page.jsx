@@ -65,9 +65,9 @@ export default function Home() {
     };
   }, [debouncedFetchConcepts]);
 
-  const fetchMediSpanIdStrengths = async (query) => {
+  const fetchStrengthsByMediSpanId = async (query) => {
     const response = await fetch(
-      `/api/searchMediSpanIdStrengths?search=${query}`
+      `/api/searchStrengthsByMediSpanId?search=${query}`
     );
     const data = await response.json();
     setStrengths(data?.results || []);
@@ -75,7 +75,7 @@ export default function Home() {
 
   useEffect(() => {
     if (mediSpanId) {
-      fetchMediSpanIdStrengths(mediSpanId);
+      fetchStrengthsByMediSpanId(mediSpanId);
     }
   }, [mediSpanId]);
 

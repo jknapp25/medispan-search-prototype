@@ -40,9 +40,9 @@ export default async function handler(
 
   try {
     const searchTerms = (search as string).split(" ");
-    const searchCriteria = searchTerms.map((term) => ({
+    const searchCriteria = searchTerms.map((term, i) => ({
       field: "name",
-      operator: "contains",
+      operator: i === 0 ? "startsWith" : "contains",
       value: term,
     }));
 
