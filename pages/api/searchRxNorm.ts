@@ -14,6 +14,7 @@ const fetchYall = async (searchCriteria: any) => {
   const detailSearchData = JSON.stringify({
     customerTransactionId: CUSTOMER_TRANSACTION_ID,
     criteria: searchCriteria,
+    count: "25",
     fields: ["all"],
   });
 

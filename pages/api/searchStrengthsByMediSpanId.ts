@@ -20,6 +20,7 @@ const fetchStrengths = async (mediSpanId: any) => {
       },
     ],
     fields: ["name"],
+    count: "25",
     relatedConcepts: [
       {
         conceptType: "medispan/dispensabledrugs",
