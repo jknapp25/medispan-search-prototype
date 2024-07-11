@@ -11,9 +11,6 @@ export default function Home() {
     params.get("showDescription") === "true" ? true : false
   );
 
-  console.log(typeof showDescription);
-  console.log(showDescription);
-
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="p-5 grid grid-cols-1 lg:grid-cols-3">
